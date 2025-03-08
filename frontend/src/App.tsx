@@ -12,6 +12,7 @@ interface Snippet {
   code: string;
   category: string;
   tags: string[];
+  language: string; // Add the language property
 }
 
 const App: React.FC = () => {
@@ -76,7 +77,7 @@ const App: React.FC = () => {
       );
       setSnippets(updatedSnippets);
     } else {
-      const newSnippet: Snippet = { id: Date.now(), title, code, category, tags };
+      const newSnippet: Snippet = { id: Date.now(), title, code, category, tags, language: 'javascript' }; // Add a default language or get it from user input
       setSnippets([...snippets, newSnippet]);
     }
     setSnackbarMessage('Snippet saved successfully!');
@@ -94,6 +95,11 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
+      {/* Header with Title */}
+      <header className="app-header">
+        <h1>DevCache</h1> {/* Title of the page */}
+      </header>
+
       {/* Search Bar */}
       <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
 
@@ -104,13 +110,14 @@ const App: React.FC = () => {
           filteredSnippets.map(snippet => (
             <div key={snippet.id} className="snippet-card-wrapper">
               <SnippetCard
-                title={snippet.title}
-                code={snippet.code}
-                category={snippet.category}
-                tags={snippet.tags} // Display tags
-              />
-              <button onClick={() => openModal(snippet)}>Edit</button>
-              <button onClick={() => deleteSnippet(snippet.id)}>Delete</button>
+              title={snippet.title}
+              code={snippet.code}
+              category={snippet.category}
+              tags={snippet.tags}
+              language={snippet.language} // Pass the language prop
+              onEdit={() => openModal(snippet)}
+              onDelete={() => deleteSnippet(snippet.id)}
+            />
             </div>
           ))
         ) : (

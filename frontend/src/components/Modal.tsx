@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { oneDark } from '@codemirror/theme-one-dark';
 
 interface Snippet {
   code: string;
@@ -11,11 +14,9 @@ interface Snippet {
 interface ModalProps {
   showModal: boolean;
   onClose: () => void;
-  onSave: (code: string, title: string, category: string, tags: string[]) => void;
-  snippet?: Snippet | null; // Optional if editing
+  onSave: (title: string, code: string, category: string, tags: string[]) => void;
+  snippet?: Snippet | null;
 }
-
-
 
 const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) => {
   const [title, setTitle] = useState<string>('');
@@ -23,21 +24,25 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
   const [category, setCategory] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
 
-
-  // When the modal opens for editing, prefill the values
   useEffect(() => {
     if (snippet) {
-      setTitle(snippet.title);
-      setCode(snippet.code);
-      setCategory(snippet.category);
+      setTitle(snippet.title || '');
+      setCode(snippet.code || '');
+      setCategory(snippet.category || '');
+      setTags(snippet.tags || []);
     } else {
       setTitle('');
       setCode('');
       setCategory('');
+      setTags([]);
     }
   }, [snippet]);
 
   const handleSave = () => {
+    if (!title.trim() || !code.trim() || !category.trim()) {
+      alert('Title, Code, and Category cannot be empty!');
+      return;
+    }
     onSave(title, code, category, tags);
     onClose();
   };
@@ -46,33 +51,51 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
     showModal && (
       <div className="modal-overlay">
         <div className="modal">
-          <h3>{snippet ? 'Edit Snippet' : 'Add Snippet'}</h3>
+          <h3 className='new-snippet-header'>{snippet ? 'Edit Snippet' : 'Add Snippet'}</h3>
+
+          {/* Title Input */}
+          <label className='label'>Title:</label>
           <input
+            className="title-input"
             type="text"
             placeholder="Snippet Title"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
-          <textarea
+
+          {/* Code Input (Syntax Highlighted) */}
+            <CodeMirror
             value={code}
-            onChange={e => setCode(e.target.value)}
-            placeholder="Type your code here"
-          />
-           <input
-            type="text"
-            placeholder="Category"
-            value={category}
-            onChange={e => setCategory(e.target.value)} 
+            height="200px"
+            extensions={[javascript()]}
+            theme={oneDark}
+            onChange={(value: string) => setCode(value)}
             />
+
+          {/* Category Input */}
+          <label className='label'>Category:</label>
           <input
+            className="category-input"
             type="text"
-            placeholder="Tags"
-            value={tags.join(', ')}
-            onChange={e => setTags(e.target.value.split(',').map(tag => tag.trim()))}
+            placeholder="Enter category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
           />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={onClose}>Close</button>
+
+          {/* Tags Input */}
+          <label className='label'>Tags:</label>
+          <input
+            className="tags-input"
+            type="text"
+            placeholder="Tags (comma-separated)"
+            value={tags.join(', ')}
+            onChange={(e) => setTags(e.target.value.split(',').map(tag => tag.trim()))}
+          />
+
+          <div className="modal-buttons">
+            <button className='close-button' onClick={onClose}>Close</button>
+            <button className='save-button' onClick={handleSave}>Save</button>
+          </div>
         </div>
       </div>
     )
