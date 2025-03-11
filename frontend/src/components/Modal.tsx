@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
+import { html } from '@codemirror/lang-html';
+import { css } from '@codemirror/lang-css';
 import { oneDark } from '@codemirror/theme-one-dark';
 
 interface Snippet {
@@ -9,12 +12,13 @@ interface Snippet {
   category: string;
   id: number;
   tags?: string[];
+  language: string;
 }
 
 interface ModalProps {
   showModal: boolean;
   onClose: () => void;
-  onSave: (title: string, code: string, category: string, tags: string[]) => void;
+  onSave: (title: string, code: string, category: string, tags: string[], language: string) => void;
   snippet?: Snippet | null;
 }
 
@@ -23,6 +27,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
   const [code, setCode] = useState<string>('');
   const [category, setCategory] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
+  const [language, setLanguage] = useState<string>('javascript'); // Default language
 
   useEffect(() => {
     if (snippet) {
@@ -30,11 +35,13 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
       setCode(snippet.code || '');
       setCategory(snippet.category || '');
       setTags(snippet.tags || []);
+      setLanguage(snippet.language || 'javascript'); // Set language if snippet exists
     } else {
       setTitle('');
       setCode('');
       setCategory('');
       setTags([]);
+      setLanguage('javascript');
     }
   }, [snippet]);
 
@@ -43,8 +50,24 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
       alert('Title, Code, and Category cannot be empty!');
       return;
     }
-    onSave(title, code, category, tags);
+    onSave(title, code, category, tags, language); // Pass the language to onSave
     onClose();
+  };
+
+  // Select the correct language extension based on the selected language
+  const getLanguageExtension = () => {
+    switch (language) {
+      case 'javascript':
+        return javascript();
+      case 'python':
+        return python();
+      case 'html':
+        return html();
+      case 'css':
+        return css();
+      default:
+        return javascript(); // Default to JavaScript
+    }
   };
 
   return (
@@ -64,13 +87,26 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
           />
 
           {/* Code Input (Syntax Highlighted) */}
-            <CodeMirror
+          <CodeMirror
             value={code}
             height="200px"
-            extensions={[javascript()]}
+            extensions={[getLanguageExtension()]}
             theme={oneDark}
             onChange={(value: string) => setCode(value)}
-            />
+          />
+
+          {/* Language Selector */}
+          <label className="label">Language:</label>
+          <select
+            className="language-selector"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+          </select>
 
           {/* Category Input */}
           <label className='label'>Category:</label>
@@ -87,7 +123,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
           <input
             className="tags-input"
             type="text"
-            placeholder="Tags (comma-separated)"
+            placeholder="Enter tags"
             value={tags.join(', ')}
             onChange={(e) => setTags(e.target.value.split(',').map(tag => tag.trim()))}
           />
