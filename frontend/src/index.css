@@ -2,7 +2,6 @@
 body {
   background-color: #1e1e1e;
   color: #e0e0e0;
-  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
   font-family: "Open Sans", sans-serif;
@@ -20,8 +19,7 @@ body {
   text-align: center;
   padding: 20px;
   color: #fff;
-  font-family: "Open Sans", sans-serif;
-  font-weight: 800;
+  font-family: "Fira Code";
 }
 
 .snippet-card-wrapper{
@@ -35,6 +33,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   max-width: 100%;
+  min-width: 400px;
   overflow: hidden;
 }
 
@@ -84,6 +83,15 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 0.9rem;
+}
+
+.output-container {
+  background: #ffffff;
+  color: #000000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.761);
+  margin-top: 20px;
 }
 
 .category-badge {
@@ -202,6 +210,7 @@ input::placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 }
 
 .modal {
@@ -229,6 +238,15 @@ input::placeholder {
   color: #ffffff;
 }
 
+.language-selector {
+  padding: 10px;
+  margin: 20px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  background-color: #3c374f;
+  color: #fff;
+}
+
 .category-input {
   padding: 10px;
   margin: 20px;
@@ -237,13 +255,6 @@ input::placeholder {
   color: #ffffff;
 }
 
-.tags-input {
-  padding: 10px;
-  margin: 20px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  color: #ffffff;
-}
 
 .label {
   color: #ffffff;
@@ -263,7 +274,7 @@ input::placeholder {
 
 /* Close Button Styling */
 .close-button {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -274,8 +285,8 @@ input::placeholder {
 }
 
 .close-button:hover {
-  background-color: #d32f2f; /* Darker red on hover */
-  transform: scale(1.05); /* Slight zoom effect */
+  background-color: #d32f2f;
+  transform: scale(1.05);
 }
 
 .close-button:focus {
@@ -285,7 +296,7 @@ input::placeholder {
 
 /* Save Button Styling */
 .save-button {
-  background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -316,4 +327,63 @@ input::placeholder {
   color: #fdb239 ;
 }
 
+.run-icon {
+  cursor: pointer;
+  color: #3498db;
+  transition: transform 0.2s ease-in-out;
+}
 
+.run-icon:hover {
+  color: #5faee3;
+}
+
+.modal-overlay-output {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.modal-content-output {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 600px;
+  color: #000000;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px; 
+}
+
+.output-box {
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  padding: 10px; 
+}
+
+.close-button-output {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.close-button-output:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+}

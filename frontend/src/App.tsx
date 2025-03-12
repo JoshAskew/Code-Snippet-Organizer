@@ -70,20 +70,28 @@ const App: React.FC = () => {
     setShowModal(false);
   };
 
-  const saveSnippet = (title: string, code: string, category: string, tags: string[]) => {
+  const saveSnippet = (title: string, code: string, category: string, tags: string[], language: string) => {
     if (currentSnippet) {
       const updatedSnippets = snippets.map(snippet =>
-        snippet.id === currentSnippet.id ? { ...snippet, title, code, category, tags } : snippet
+        snippet.id === currentSnippet.id ? { ...snippet, title, code, category, tags, language } : snippet
       );
       setSnippets(updatedSnippets);
     } else {
-      const newSnippet: Snippet = { id: Date.now(), title, code, category, tags, language: 'javascript' }; // Add a default language or get it from user input
+      const newSnippet: Snippet = { 
+        id: Date.now(), 
+        title, 
+        code, 
+        category, 
+        tags, 
+        language // Use the language from the modal
+      };
       setSnippets([...snippets, newSnippet]);
     }
     setSnackbarMessage('Snippet saved successfully!');
     setIsSnackbarVisible(true);
     setTimeout(() => setIsSnackbarVisible(false), 3000);
   };
+  
 
   const deleteSnippet = (id: number) => {
     const updatedSnippets = snippets.filter(snippet => snippet.id !== id);
@@ -113,7 +121,6 @@ const App: React.FC = () => {
               title={snippet.title}
               code={snippet.code}
               category={snippet.category}
-              tags={snippet.tags}
               language={snippet.language} // Pass the language prop
               onEdit={() => openModal(snippet)}
               onDelete={() => deleteSnippet(snippet.id)}

@@ -18,6 +18,7 @@ app.post("/api/execute", async (req, res) => {
 
   let command;
 
+  // Handle JavaScript (Node.js and browser code)
   if (language === "javascript") {
     // Check if it's pure JavaScript or HTML/JS for the browser
     if (code.includes("<script") || code.includes("<html")) {
@@ -27,9 +28,13 @@ app.post("/api/execute", async (req, res) => {
       // For Node.js-specific JavaScript code
       command = `node -e "${code.replace(/"/g, '\\"')}"`;
     }
-  } else if (language === "python") {
-    command = `python3 -c "${code.replace(/"/g, '\\"')}"`;
-  } else {
+  }
+  // Handle HTML
+  else if (language === "html") {
+    // For HTML, just return the code as is
+    return res.json({ output: code });
+  }
+  else {
     return res.status(400).json({ error: "Unsupported language" });
   }
 
@@ -40,6 +45,7 @@ app.post("/api/execute", async (req, res) => {
     res.json({ output: stdout });
   });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

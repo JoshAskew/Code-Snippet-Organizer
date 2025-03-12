@@ -11,7 +11,6 @@ interface Snippet {
   title: string;
   category: string;
   id: number;
-  tags?: string[];
   language: string;
 }
 
@@ -34,7 +33,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
       setTitle(snippet.title || '');
       setCode(snippet.code || '');
       setCategory(snippet.category || '');
-      setTags(snippet.tags || []);
       setLanguage(snippet.language || 'javascript'); // Set language if snippet exists
     } else {
       setTitle('');
@@ -53,6 +51,7 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
     onSave(title, code, category, tags, language); // Pass the language to onSave
     onClose();
   };
+
 
   // Select the correct language extension based on the selected language
   const getLanguageExtension = () => {
@@ -86,6 +85,18 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
             onChange={(e) => setTitle(e.target.value)}
           />
 
+          {/* Language Selector */}
+          <label className="label">Language:</label>
+          <select
+            className="language-selector"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+          </select>
+
           {/* Code Input (Syntax Highlighted) */}
           <CodeMirror
             value={code}
@@ -95,18 +106,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
             onChange={(value: string) => setCode(value)}
           />
 
-          {/* Language Selector */}
-          <label className="label">Language:</label>
-          <select
-            className="language-selector"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-          >
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-          </select>
 
           {/* Category Input */}
           <label className='label'>Category:</label>
@@ -116,16 +115,6 @@ const Modal: React.FC<ModalProps> = ({ showModal, onClose, onSave, snippet }) =>
             placeholder="Enter category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-          />
-
-          {/* Tags Input */}
-          <label className='label'>Tags:</label>
-          <input
-            className="tags-input"
-            type="text"
-            placeholder="Enter tags"
-            value={tags.join(', ')}
-            onChange={(e) => setTags(e.target.value.split(',').map(tag => tag.trim()))}
           />
 
           <div className="modal-buttons">
