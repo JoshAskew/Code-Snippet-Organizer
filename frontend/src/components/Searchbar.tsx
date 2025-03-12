@@ -13,6 +13,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearch }) => {
       <div className="search-bar">
         <Search className="search-icon" />
         <input
+          className='search-input'
           type="text"
           placeholder="Search snippets..."
           value={searchQuery}

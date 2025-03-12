@@ -105,7 +105,11 @@ const App: React.FC = () => {
     <div className="container">
       {/* Header with Title */}
       <header className="app-header">
-        <h1>DevCache</h1> {/* Title of the page */}
+      <h1 className="title">
+  <span className="chevron">&lt;</span>
+  <span className="name">DevCache</span>
+  <span className="chevron"> /&gt;</span>
+</h1>
       </header>
 
       {/* Search Bar */}
